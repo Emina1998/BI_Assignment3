@@ -55,6 +55,39 @@ that can recognize handwritten letters without human involvement. By improving t
 and accuracy of character recognition, the company aims to reduce manual sorting costs, decrease 
 processing time per mail item, and minimize sorting errors that lead to delays.
 
+\subsection{Business Success Criteria}
+Business success will be achieved if the final system consistently recognizes 
+handwritten letters with high accuracy and operates fast enough for large-scale mail processing. 
+A useful threshold for business success is achieving at least around 90\% recognition accuracy on 
+previously unseen samples, reducing manual sorting effort by a measurable amount, and making sure that 
+the automated system does not introduce operational risks like frequent misclassification of 
+visually similar letters. The model must be reliable enough to support continuous deployment in a 
+logistics workflow.
+
+\subsection{Data Mining Goals}
+The goal is to build a predictive model that can classify each input into one of 26 letter categories
+based on the extracted numerical features. This includes selecting a suitable machine learning 
+algorithm, performing preprocessing, tuning key hyperparameters, and evaluating 
+the model using appropriate metrics for multiclass classification.
+
+\subsection{Data Mining Success Criteria}
+The goal is to have a trained model that reaches strong classification 
+performance on a test set, ideally approaching or exceeding 90\% accuracy, 
+while maintaining balanced performance across all classes. The process should demonstrate 
+good improvement through hyperparameter tuning and produce reproducible results documented 
+in the provenance graph. Success means that the model meets the technical requirements needed 
+to fulfill the business objectives.
+
+\subsection{AI Risk Aspects}
+Some of the AI risks still exist even though the dataset does not involve personally sensitive attributes.
+The system may misclassify visually similar letters,
+which could lead to operational errors in automated sorting. The dataset might represent only a
+limited range of handwriting styles, making the model less robust when applied to real-world data
+that varies in pen type, writing habits, or scanning quality. Also the system must be monitored
+for drift and provide fallback options so that uncertain predictions do not automatically trigger
+incorrect routing decisions. Transparency about model limitations is important to guarantee safe deployment.
+
+
 %% --- 2. Data Understanding ---
 \section{Data Understanding}
 \textbf{Dataset Description:} 
@@ -64,14 +97,15 @@ The following features were identified in the dataset:
 \begin{table}[h]
   \caption{Raw Data Features}
   \label{tab:features}
-  \begin{tabular}{lp{0.2\linewidth}p{0.4\linewidth}}
+  \begin{tabular}{l l l p{0.35\linewidth}}
     \toprule
-    \textbf{Feature Name} & \textbf{Data Type} & \textbf{Description} \\
+    \textbf{Feature Name} & \textbf{Data Type} & \textbf{Unit} & \textbf{Description} \\
     \midrule
-    
+    {du_table_rows}
     \bottomrule
   \end{tabular}
 \end{table}
+
 
 %% --- 3. Data Preparation ---
 \section{Data Preparation}
