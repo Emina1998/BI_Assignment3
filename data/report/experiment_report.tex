@@ -79,6 +79,8 @@ in the provenance graph. Success means that the model meets the technical requir
 to fulfill the business objectives.
 
 \subsection{AI Risk Aspects}
+\subsection{AI Risk Aspects}
+
 Some of the AI risks still exist even though the dataset does not involve personally sensitive attributes.
 The system may misclassify visually similar letters,
 which could lead to operational errors in automated sorting. The dataset might represent only a
@@ -97,21 +99,288 @@ The following features were identified in the dataset:
 \begin{table}[h]
   \caption{Raw Data Features}
   \label{tab:features}
-  \begin{tabular}{l l l p{0.35\linewidth}}
+  \begin{tabular}{lp{0.2\linewidth}p{0.4\linewidth}}
     \toprule
-    \textbf{Feature Name} & \textbf{Data Type} & \textbf{Unit} & \textbf{Description} \\
+    \textbf{Feature Name} & \textbf{Data Type} & \textbf{Description} \\
     \midrule
-    {du_table_rows}
+    
     \bottomrule
   \end{tabular}
 \end{table}
 
+\subsection{Data Quality Analysis}
+
+\textbf{Outlier Detection.}\\
+Potential outliers were identified using a simple z-score-based approach applied
+to all numeric feature columns. Values with an absolute z-score greater than 2.2
+were flagged as outliers. This threshold is intentionally chosen for demonstration
+purposes and exploratory data understanding, rather than as a statistically strict
+criterion.
+
+\textbf{Outlier Inspection and Decision.}\\
+After inspecting the outlier report, the identified extreme values are considered
+in the context of handwritten character data. No immediate removal is performed
+at this stage, as such values may represent valid but rare writing styles.
+A final decision on handling outliers will be taken during the data preparation phase.
+
+\subsection{Statistical Properties}
+Skewness was computed for all numerical feature attributes of the
+Letter Recognition dataset.
+
+The features represent engineered, image-derived descriptors such as
+bounding box geometry, pixel distributions, and edge-related measures.
+Several features exhibit mild positive or negative skewness, which is
+expected due to the bounded and discrete nature of the underlying values
+(e.g., integer ranges from 0 to 15).
+
+No extreme skewness values were observed that would indicate data quality
+issues. The observed skewness patterns are typical for handcrafted feature
+representations derived from scanned character images.
+
+Calculated skewness values:
+\{
+  "xbox ": 0.7150563042044474,
+  "ybox ": -0.2279666191955935,
+  "width ": 0.23494124711102027,
+  "height": -0.2782494435648324,
+  "onpix ": 0.943373103894761,
+  "xbar ": -0.31007906987273065,
+  "ybar ": 0.09347117311468756,
+  "x2bar": 1.1599750154233797,
+  "y2bar ": 0.28693378812325043,
+  "xybar ": 0.0900779625543653,
+  "x2ybar": 0.2881680732330863,
+  "xy2bar": 0.27372792876872903,
+  "xedge ": 1.0572883328024416,
+  "xedgey": 0.049198332949596586,
+  "yedge ": 0.4683430978970719,
+  "yedgex": -0.19950668181472136
+\}
+
+\subsection{Data Quality Analysis}
+
+\textbf{Missing Values Check.}\\
+Checking the dataset for missing values by counting null entries per column.
+The resulting report summarizes the number of missing values for each feature.
+
+
+\textbf{Inspection and Decision.}\\
+The missing values report was inspected. No missing values were detected in any
+of the dataset columns. Therefore, no data cleaning or imputation is required
+at this stage.
+
+\textbf{Feature Scale Analysis.}\\
+Identifying differences in feature scales by computing minimum, maximum, mean,
+and standard deviation values for each numeric feature. The observed minimum and
+maximum values fall within the expected bounded range of the dataset, indicating
+that the feature values are plausible and no invalid measurements are present.
+
+\textbf{Inspection and Decision.}\\
+After inspecting the feature scale report, it was observed that although all
+numeric features share the same bounded range, their standard deviations differ
+substantially. To prevent features with larger variance from dominating the
+learning process, the decision was made to apply feature scaling during the
+Data Preparation phase.
+
+\subsection{Visual Exploration}
+Firstly we visually explored the target variable of the dataset. It is approximately evenly distributed, indicating
+no severe class imbalance or underrepresented categories.
+
+The histogram of the representative numeric feature 'xbox' shows a bounded
+distribution with values concentrated within the expected range, confirming
+plausibility of the image-derived measurements and absence of extreme values.
+
+These visualizations support the suitability of the dataset for multi-class
+classification and motivate our idea of the of feature scaling in the data
+preparation phase.
+
+Visual summary:
+\{
+  "figures\_generated": 2,
+  "description": "Bar chart of letter class distribution and histogram of xbox feature.",
+  "letter\_class\_distribution": \{
+    "U": 813,
+    "D": 805,
+    "P": 803,
+    "T": 796,
+    "M": 792,
+    "A": 789,
+    "X": 787,
+    "Y": 786,
+    "N": 783,
+    "Q": 783,
+    "F": 775,
+    "G": 773,
+    "E": 768,
+    "B": 766,
+    "V": 764,
+    "L": 761,
+    "R": 758,
+    "I": 755,
+    "O": 753,
+    "W": 752,
+    "S": 748,
+    "J": 747,
+    "K": 739,
+    "C": 736,
+    "H": 734,
+    "Z": 734
+  \},
+  "xbox\_summary\_statistics": \{
+    "count": 20000.0,
+    "mean": 4.02355,
+    "std": 1.9132115451305485,
+    "min": 0.0,
+    "25\%": 3.0,
+    "50\%": 4.0,
+    "75\%": 5.0,
+    "max": 15.0
+  \}
+\}
+
+
+\subsection{What potential risks and additional types of bias exist in the data? What questions would you
+need to have answered by an external expert in order to determine potential bias or data
+quality issues?}
+Ethical Sensitivity:
+The Letter Recognition dataset does not contain any personal, demographic, or
+otherwise ethically sensitive attributes. All instances represent scanned
+handwritten characters without any linkage to identifiable individuals.
+Therefore, the dataset poses minimal ethical risk with respect to privacy,
+discrimination, or unfair treatment of individuals.
+
+Minority Classes and Class Balance:
+The target variable consists of 26 capital letters (A–Z). Visual inspection of
+the class distribution indicates that the letter classes are approximately
+evenly represented, and no severe class imbalance or underrepresented categories
+were identified. As a result, no specific over-sampling or under-sampling
+strategies are required.
+
+Potential Bias Considerations:
+Although no explicit sensitive attributes are present, implicit bias may still
+arise from the limited diversity of handwriting styles captured in the dataset.
+For example, the dataset may underrepresent certain writing habits, pen types,
+or writing conditions. This could affect generalization performance when the
+model is applied to handwriting data collected under different conditions.
+
+Evaluation Implications:
+Model evaluation should focus on balanced multi-class metrics (e.g., macro-averaged
+accuracy or F1-score) to ensure consistent performance across all letter classes.
+
+\subsection{Which actions are likely required in data preparation based on this analysis?
+}
+Potential Risks and Additional Biases:
+Although the Letter Recognition dataset does not contain ethically sensitive or
+personal attributes, there do exist potential sources of bias and data quality risks. 
+The dataset may not capture the full diversity of real-world handwriting
+styles, since it is unclear how many writers contributed to the data or whether
+variations in age, cultural background, writing habits, or motor skills are
+adequately represented.
+
+Secondly, the dataset only contains English capital  letters written using the Latin alphabet, which is quite limiting. 
+A model trained on this data could perform poorly on lowercase letters, non-Latin text etc.
+
+Another potential risk lies in the feature extraction process. Since the dataset
+contains precomputed numeric features rather than raw images, any bias or loss
+of information introduced during feature extraction is inherited by downstream
+models and cannot be corrected at later stages.
+
+Questions for External Experts:
+To better assess potential bias and data quality issues, the following questions
+would need to be clarified by dataset curators or domain experts:
+- How many distinct writers contributed to the dataset?
+- Under what conditions were the handwritten characters collected and scanned?
+- Are certain handwriting styles or character shapes overrepresented?
+- What preprocessing or normalization steps were applied during feature extraction?
+- Is the dataset considered representative of modern, real-world handwriting use cases?
 
 %% --- 3. Data Preparation ---
 \section{Data Preparation}
 \subsection{Data Cleaning}
 Describe your Data preparation steps here and include respective graph data.
 
+\subsection{Normalization of column names}
+Column name normalization was applied by removing leading and trailing whitespace
+from all attribute names. This step was motivated by inconsistencies in the raw
+dataset, where some feature names contained trailing spaces (e.g., 'xbox '),
+which led to access errors during data exploration.
+
+The normalization improves robustness, readability, and reproducibility of
+subsequent preprocessing and analysis steps, without altering the underlying
+data values.
+
+\subsection{Feature target separation}
+The dataset was separated into a feature matrix that contains all numeric descriptors
+and a target vector that contains the letter labels. This will ensure a  distinction between the input variables and the prediction target. This was decided in the Data
+Understanding phase and was done to prepare the data for steps like different transformations
+and modeling that are to come in this exercise.
+
+\subsection{Target variable encoding}
+The categorical target variable representing handwritten letters
+(A–Z) has been encodued into numeric class labels using label encoding.  This
+encoding assigns a unique integer value to each letter class and preserves
+a one-to-one correspondence between the original labels and their encoded
+representation. This transformation was chosen in the previous phase as a prefect step  required to make the target
+variable compatible with machine learning algorithms in subsequent steps.
+
+\subsection{Feature scaling}
+Feature scaling was applied using standardization (z-score normalization) to ensure
+that all numeric attributes contribute equally during model training. Although all
+features are bounded within a similar range, in the Data Understanding phase we have seen some
+differences in feature variance. 
+This was done with the idea to improve numerical stability and performance of classification algorithms 
+that will be implemented in the following steps of the exercise.
+
+A side-by-side boxplot comparison before and after scaling was created to
+visually confirm that feature variance was aligned across all attributes.
+The visualization demonstrates that scaling affects magnitude but preserves
+the original distributional structure of the data.
+
+
+\subsection{Pre-processing steps considered but not applied}
+There are several  steps that are usually part of preprocessing but we decided against using them. The argumentation for them is:
+
+1. Outlier removal - considering that our dataset did not have any outliers we did not have the need for performing any steps that 
+are related to outlier handling.
+
+2. Missing value imputation - we have also explored if our dataset had any missing values, and since it did not have any,
+there was no need to take any steps regarding handling missing values.
+
+3. Feature removal was something that we did consider and discuss, but all 16 numeric attributes represent distinct geometric or
+   pixel-based properties and they seem to all be informative and important for the classification task.
+
+4. Binning or discretization of numeric features was not applied. The features are already
+   discrete and bounded, so there was no need for these steps.
+
+5. Alternative scaling methods such as min–max scaling were considered. Standardization
+   (zero mean, unit variance) was selected instead, as it is more suitable for models sensitive
+   to feature variance.
+\subsection{Potential for derived attributes}
+The potential for derived attributes was evaluated for the Letter Recognition dataset.
+
+Possible derived attributes that we have considered include:
+1. Ratios or combinations of existing geometric features (e.g., width-to-height ratio,
+   edge density ratios).
+2. Polynomial feature expansions to capture non-linear interactions between attributes.
+3. Aggregate measures combining multiple edge or pixel-related features.
+
+None of these options we are done because:
+- The existing attributes are already compact, low-dimensional, and semantically meaningful.
+- Additional derived features could introduce redundancy and multicollinearity.
+- The primary modeling goal is evaluating classification performance using the
+  original standardized feature representation.
+\subsection{Additional external data sources}
+Several potential external data sources and additional attributes could in theory be useful.
+Writer-related metadata (e.g., age group, handedness, or writing style) could help
+assess whether the model performs consistently across different handwriting styles
+and detect possible biases, which are some of  the issues we spoke about earlier.
+
+Some additional information about data acquisition conditions, such as scan resolution or noise level,
+could improve robustness analysis, since the  dataset contains only clean
+features only. It could mean a lot for the following steps to know the process of getting these clean features insted of just the end resulta
+
+Using an additional  dataset or more of them (e.g., EMNIST or similar benchmarks) could be used
+for external validation to test generalization.
 
 %% --- 4. Modeling ---
 \section{Modeling}
